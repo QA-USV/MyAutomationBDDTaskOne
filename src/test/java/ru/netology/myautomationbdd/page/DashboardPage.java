@@ -13,8 +13,6 @@ public class DashboardPage {
     private final String balanceStart = "баланс: ";
     private final String balanceFinish = " р.";
 
-    String sumToAdd;
-
     public DashboardPage() {
         heading.shouldBe(visible);
     }

@@ -27,57 +27,59 @@ public class MoneyTransferTest {
 
     @Test
     public void shouldTransferMoneyToFirstCard() {
-        String sumToAdd = "25";
+        int sumToAdd = 25;
         DashboardPage page = new DashboardPage();
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
         int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
         $(firstCardButton).click();
-        $("[data-test-id=amount] input").setValue(sumToAdd);
-        $("[data-test-id=from] input").setValue(secondCardNumber);
-        $("[data-test-id=action-transfer]").click();
-        int sum = Integer.parseInt(sumToAdd);
-        int expectedBalanceFirstCard = balanceFirstCardBeforeTransfer + sum;
-        int expectedBalanceSecondCard = balanceSecondCardBeforeTransfer - sum;
-        Assertions.assertEquals(expectedBalanceFirstCard, page.getFirstCardBalance());
-        Assertions.assertEquals(expectedBalanceSecondCard, page.getSecondCardBalance());
+        $(sumToTransfer).setValue(Integer.toString(sumToAdd));
+        $(cardNumber).setValue(secondCardNumber);
+        $(transferButton).click();
+        Assertions.assertEquals(balanceFirstCardBeforeTransfer + sumToAdd, page.getFirstCardBalance());
+        Assertions.assertEquals(balanceSecondCardBeforeTransfer - sumToAdd, page.getSecondCardBalance());
     }
 
     @Test
     void shouldTransferMoneyToSecondCard() {
-        String sumToAdd = "250";
+        int sumToAdd = 250;
         DashboardPage page = new DashboardPage();
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
         int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
         $(secondCardButton).click();
-        $("[data-test-id=amount] input").setValue(sumToAdd);
-        $("[data-test-id=from] input").setValue(firstCardNumber);
-        $("[data-test-id=action-transfer]").click();
-        int sum = Integer.parseInt(sumToAdd);
-        int expectedBalanceFirstCard = balanceFirstCardBeforeTransfer - sum;
-        int expectedBalanceSecondCard = balanceSecondCardBeforeTransfer + sum;
-        Assertions.assertEquals(expectedBalanceFirstCard, page.getFirstCardBalance());
-        Assertions.assertEquals(expectedBalanceSecondCard, page.getSecondCardBalance());
+        $(sumToTransfer).setValue(Integer.toString(sumToAdd));
+        $(cardNumber).setValue(firstCardNumber);
+        $(transferButton).click();
+        Assertions.assertEquals(balanceFirstCardBeforeTransfer - sumToAdd, page.getFirstCardBalance());
+        Assertions.assertEquals(balanceSecondCardBeforeTransfer + sumToAdd, page.getSecondCardBalance());
     }
 
     @Test
     void shouldNotTransferFromSecondCardAboveItsBalance() {
         DashboardPage page = new DashboardPage();
-        String sumToAdd = String.valueOf(page.getSecondCardBalance() + 100);
+        int sumToAdd = page.getSecondCardBalance() + 100;
+        int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
+        int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
         $(firstCardButton).click();
-        $("[data-test-id=amount] input").setValue(sumToAdd);
-        $("[data-test-id=from] input").setValue(secondCardNumber);
-        $("[data-test-id=action-transfer]").click();
+        $(sumToTransfer).setValue(Integer.toString(sumToAdd));
+        $(cardNumber).setValue(secondCardNumber);
+        $(transferButton).click();
         $(notificationSelector).shouldHave(exactText(alertAboveBalance));
+        Assertions.assertEquals(balanceFirstCardBeforeTransfer, page.getFirstCardBalance());
+        Assertions.assertEquals(balanceSecondCardBeforeTransfer, page.getSecondCardBalance());
     }
 
     @Test
     void shouldNotTransferFromFirstCardAboveItsBalance() {
         DashboardPage page = new DashboardPage();
-        String sumToAdd = String.valueOf(page.getFirstCardBalance() + 100);
+        int sumToAdd = page.getFirstCardBalance() + 100;
+        int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
+        int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
         $(secondCardButton).click();
-        $("[data-test-id=amount] input").setValue(sumToAdd);
-        $("[data-test-id=from] input").setValue(firstCardNumber);
-        $("[data-test-id=action-transfer]").click();
+        $(sumToTransfer).setValue(Integer.toString(sumToAdd));
+        $(cardNumber).setValue(firstCardNumber);
+        $(transferButton).click();
         $(notificationSelector).shouldHave(exactText(alertAboveBalance));
+        Assertions.assertEquals(balanceFirstCardBeforeTransfer, page.getFirstCardBalance());
+        Assertions.assertEquals(balanceSecondCardBeforeTransfer, page.getSecondCardBalance());
     }
 }
