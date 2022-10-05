@@ -19,7 +19,6 @@ public class TransferPage {
     private final SelenideElement notificationSelector = $("[data-test-id='error-notification'] .notification__content");
     private static final String alertAboveBalance = "Не хватает денег для перевода. Уменьшите сумму или выберете другую карту";
 
-    int sumToAdd;
     public void transferToFirstCard(int sumToAdd) {
         firstCardButton.click();
         sumToTransfer.setValue(Integer.toString(sumToAdd));
