@@ -6,11 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.myautomationbdd.page.DashboardPage;
 import ru.netology.myautomationbdd.page.LoginPage;
+import ru.netology.myautomationbdd.page.TransferPage;
 
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static ru.netology.myautomationbdd.data.DataHelper.*;
+import static ru.netology.myautomationbdd.data.DataHelper.getAuthInfo;
+import static ru.netology.myautomationbdd.data.DataHelper.getVerificationCodeFor;
+import static ru.netology.myautomationbdd.page.TransferPage.firstCardNumber;
+import static ru.netology.myautomationbdd.page.TransferPage.secondCardNumber;
 
 public class MoneyTransferTest {
 
@@ -27,14 +29,12 @@ public class MoneyTransferTest {
 
     @Test
     public void shouldTransferMoneyToFirstCard() {
-        int sumToAdd = 25;
+        var sumToAdd = 25;
         DashboardPage page = new DashboardPage();
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
         int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
-        $(firstCardButton).click();
-        $(sumToTransfer).setValue(Integer.toString(sumToAdd));
-        $(cardNumber).setValue(secondCardNumber);
-        $(transferButton).click();
+        new TransferPage()
+                .transferToFirstCard(sumToAdd, secondCardNumber);
         Assertions.assertEquals(balanceFirstCardBeforeTransfer + sumToAdd, page.getFirstCardBalance());
         Assertions.assertEquals(balanceSecondCardBeforeTransfer - sumToAdd, page.getSecondCardBalance());
     }
@@ -45,27 +45,10 @@ public class MoneyTransferTest {
         DashboardPage page = new DashboardPage();
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
         int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
-        $(secondCardButton).click();
-        $(sumToTransfer).setValue(Integer.toString(sumToAdd));
-        $(cardNumber).setValue(firstCardNumber);
-        $(transferButton).click();
+        new TransferPage()
+                .transferToSecondCard(sumToAdd, firstCardNumber);
         Assertions.assertEquals(balanceFirstCardBeforeTransfer - sumToAdd, page.getFirstCardBalance());
         Assertions.assertEquals(balanceSecondCardBeforeTransfer + sumToAdd, page.getSecondCardBalance());
-    }
-
-    @Test
-    void shouldNotTransferFromSecondCardAboveItsBalance() {
-        DashboardPage page = new DashboardPage();
-        int sumToAdd = page.getSecondCardBalance() + 100;
-        int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
-        int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
-        $(firstCardButton).click();
-        $(sumToTransfer).setValue(Integer.toString(sumToAdd));
-        $(cardNumber).setValue(secondCardNumber);
-        $(transferButton).click();
-        $(notificationSelector).shouldHave(exactText(alertAboveBalance));
-        Assertions.assertEquals(balanceFirstCardBeforeTransfer, page.getFirstCardBalance());
-        Assertions.assertEquals(balanceSecondCardBeforeTransfer, page.getSecondCardBalance());
     }
 
     @Test
@@ -74,11 +57,20 @@ public class MoneyTransferTest {
         int sumToAdd = page.getFirstCardBalance() + 100;
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
         int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
-        $(secondCardButton).click();
-        $(sumToTransfer).setValue(Integer.toString(sumToAdd));
-        $(cardNumber).setValue(firstCardNumber);
-        $(transferButton).click();
-        $(notificationSelector).shouldHave(exactText(alertAboveBalance));
+        new TransferPage()
+                .transferFromFirstCardAboveBalance(sumToAdd, firstCardNumber);
+        Assertions.assertEquals(balanceFirstCardBeforeTransfer, page.getFirstCardBalance());
+        Assertions.assertEquals(balanceSecondCardBeforeTransfer, page.getSecondCardBalance());
+    }
+
+    @Test
+    void shouldNotTransferFromSecondCardAboveItsBalance() {
+        DashboardPage page = new DashboardPage();
+        int sumToAdd = page.getSecondCardBalance() + 100;
+        int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
+        int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
+        new TransferPage()
+                .transferFromSecondCardAboveBalance(sumToAdd, secondCardNumber);
         Assertions.assertEquals(balanceFirstCardBeforeTransfer, page.getFirstCardBalance());
         Assertions.assertEquals(balanceSecondCardBeforeTransfer, page.getSecondCardBalance());
     }
