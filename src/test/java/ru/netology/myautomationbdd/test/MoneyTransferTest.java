@@ -27,7 +27,7 @@ public class MoneyTransferTest {
 
     @Test
     void shouldTransferMoneyToFirstCard() {
-        var sumToAdd = 25;
+        int sumToAdd = 25;
         DashboardPage page = new DashboardPage();
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
         int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
