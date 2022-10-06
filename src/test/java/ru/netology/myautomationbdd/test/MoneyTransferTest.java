@@ -26,7 +26,7 @@ public class MoneyTransferTest {
     }
 
     @Test
-    public void shouldTransferMoneyToFirstCard() {
+    void shouldTransferMoneyToFirstCard() {
         var sumToAdd = 25;
         DashboardPage page = new DashboardPage();
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
