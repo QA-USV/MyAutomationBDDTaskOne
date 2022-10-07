@@ -4,6 +4,7 @@ import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.netology.myautomationbdd.data.DataHelper;
 import ru.netology.myautomationbdd.page.DashboardPage;
 import ru.netology.myautomationbdd.page.LoginPage;
 import ru.netology.myautomationbdd.page.TransferPage;
@@ -31,8 +32,9 @@ public class MoneyTransferTest {
         DashboardPage page = new DashboardPage();
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
         int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
+        page.pressFirstCardToAdd();
         new TransferPage()
-                .transferToFirstCard(sumToAdd);
+                .transferToCard(sumToAdd, DataHelper.secondCardNumber);
         Assertions.assertEquals(balanceFirstCardBeforeTransfer + sumToAdd, page.getFirstCardBalance());
         Assertions.assertEquals(balanceSecondCardBeforeTransfer - sumToAdd, page.getSecondCardBalance());
     }
@@ -43,8 +45,9 @@ public class MoneyTransferTest {
         DashboardPage page = new DashboardPage();
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
         int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
+        page.pressSecondCardToAdd();
         new TransferPage()
-                .transferToSecondCard(sumToAdd);
+                .transferToCard(sumToAdd, DataHelper.firstCardNumber);
         Assertions.assertEquals(balanceFirstCardBeforeTransfer - sumToAdd, page.getFirstCardBalance());
         Assertions.assertEquals(balanceSecondCardBeforeTransfer + sumToAdd, page.getSecondCardBalance());
     }
@@ -55,8 +58,11 @@ public class MoneyTransferTest {
         int sumToAdd = page.getFirstCardBalance() + 100;
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
         int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
+        page.pressSecondCardToAdd();
         new TransferPage()
-                .transferFromFirstCardAboveBalance(sumToAdd);
+                .transferToCard(sumToAdd, DataHelper.firstCardNumber);
+        new TransferPage()
+                .transferAboveBalanceAlert();
         Assertions.assertEquals(balanceFirstCardBeforeTransfer, page.getFirstCardBalance());
         Assertions.assertEquals(balanceSecondCardBeforeTransfer, page.getSecondCardBalance());
     }
@@ -67,8 +73,11 @@ public class MoneyTransferTest {
         int sumToAdd = page.getSecondCardBalance() + 100;
         int balanceFirstCardBeforeTransfer = page.getFirstCardBalance();
         int balanceSecondCardBeforeTransfer = page.getSecondCardBalance();
+        page.pressFirstCardToAdd();
         new TransferPage()
-                .transferFromSecondCardAboveBalance(sumToAdd);
+                .transferToCard(sumToAdd, DataHelper.secondCardNumber);
+        new TransferPage()
+                .transferAboveBalanceAlert();
         Assertions.assertEquals(balanceFirstCardBeforeTransfer, page.getFirstCardBalance());
         Assertions.assertEquals(balanceSecondCardBeforeTransfer, page.getSecondCardBalance());
     }

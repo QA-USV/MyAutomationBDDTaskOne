@@ -4,10 +4,11 @@ import lombok.Value;
 
 public class DataHelper {
 
-
-
     public DataHelper() {
     }
+
+    public static String firstCardNumber = "5559 0000 0000 0001";
+    public static String secondCardNumber = "5559 0000 0000 0002";
 
     @Value
     public static class AuthInfo {
