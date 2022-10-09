@@ -20,7 +20,10 @@ public class TransferPage {
         transferButton.click();
     }
 
-    public void transferAboveBalanceAlert() {
+    public void transferAboveBalanceAlert(int sumToAdd, String cardNumber) {
+        sumToTransferField.setValue(Integer.toString(sumToAdd));
+        cardNumberField.setValue(cardNumber);
+        transferButton.click();
         notificationSelector.shouldHave(Condition.exactText(aboveBalanceAlertMessage));
     }
 }

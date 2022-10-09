@@ -7,8 +7,8 @@ public class DataHelper {
     public DataHelper() {
     }
 
-    public static String firstCardNumber = "5559 0000 0000 0001";
-    public static String secondCardNumber = "5559 0000 0000 0002";
+    private static final String firstCardNumber = "5559 0000 0000 0001";
+    private static final String secondCardNumber = "5559 0000 0000 0002";
 
     @Value
     public static class AuthInfo {
@@ -28,4 +28,18 @@ public class DataHelper {
     public static VerificationCode getVerificationCodeFor(AuthInfo authInfo) {
         return new VerificationCode("12345");
     }
+
+    @Value
+    public static class CardsNumber {
+        String cardsNumber;
+    }
+
+    public static CardsNumber secondCardNumber() {
+        return new CardsNumber(secondCardNumber);
+    }
+
+    public static CardsNumber firstCardNumber() {
+        return new CardsNumber(firstCardNumber);
+    }
 }
+

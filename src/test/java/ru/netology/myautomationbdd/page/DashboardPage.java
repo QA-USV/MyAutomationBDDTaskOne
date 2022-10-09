@@ -37,11 +37,11 @@ public class DashboardPage {
         return Integer.parseInt(value);
     }
 
-    public void pressFirstCardToAdd() {
+    public void pressFirstCardButtonToAdd() {
         firstCardButton.click();
     }
 
-    public void pressSecondCardToAdd() {
+    public void pressSecondCardButtonToAdd() {
         secondCardButton.click();
     }
 }
